@@ -1,0 +1,23 @@
+import express from "express";
+import passport from "../services/authService";
+import { generateToken } from "../utils/generateToken";
+import { signup, login } from "../controllers/authController";
+
+const router = express.Router();
+
+router.post("/signup", signup);
+router.post("/login", login);
+
+router.get("/google", passport.authenticate("google", {scope: ["profile", "email"]}));
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  (req, res) => {
+    // @ts-ignore
+    const token = generateToken(req.user.email);
+    res.json({ success: true, token, message: "Google authentication successful" });
+  }
+);
+
+export default router;
