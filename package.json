@@ -4,9 +4,9 @@
   "description": "**ZeroPlate** is a web app that reduces food waste by connecting restaurants, supermarkets, and households with NGOs and food banks. Donors list surplus food, NGOs claim it, and smart matching ensures efficient redistribution, using Node.js, TypeScript, and MongoDB for a scalable, secure solution.",
   "main": "index.js",
   "scripts": {
-  "dev": "nodemon src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js"
+    "dev": "nodemon src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.ts"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,8 @@
     "mongoose": "^8.19.0",
     "nodemon": "^3.1.10",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

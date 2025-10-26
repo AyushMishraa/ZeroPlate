@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes";
 import adminRoutes from "./routes/adminRoute";
 import { connectToDb } from "./config/db";
+import foodRoutes from "./routes/foodRoute"
 
 dotenv.config();
 connectToDb();
@@ -16,5 +17,6 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/foods", foodRoutes);
 
 export default app;
