@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
-import { foodSchema } from "../validators/foodValidator";
 import { FoodInterface, FoodModel } from "../models/foodModel";
 
 const RegisterFood = async (req: Request, res: Response) => {
     try {
-        const parsedData = foodSchema.parseAsync(req.body);
-        const donorId= (req as any).user?._id;
+        const donorId= (req as any).user?.id;
+        console.log("donorId", donorId);
         // Logic to save food data to the database goes here
         const food: FoodInterface = new FoodModel({
-            ...parsedData,
+            title: req.body.title,
+            quantity: req.body.quantity,
+            expirationDate: req.body.expirationDate,
+            pickupLocation: req.body.pickupLocation,
+            type: req.body.type,
             status: req.body.status,
-            createdAt: req.body.createdAt,
-            updatedAt: req.body.updatedAt,
+            createdAt: new Date(),
+            updatedAt: new Date(),
             donor: donorId,
         });
         await food.save();

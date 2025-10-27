@@ -15,7 +15,7 @@ router.get(
   passport.authenticate("google", { session: false }),
   (req, res) => {
     // @ts-ignore
-    const token = generateToken(req.user.email);
+    const token = generateToken(req.user.email, req.user.role, req.user._id);
     res.json({ success: true, token, message: "Google authentication successful" });
   }
 );
