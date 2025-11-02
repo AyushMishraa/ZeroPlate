@@ -11,5 +11,3 @@ router.patch("/update-foodItem/:id", verifyToken, authorizeRoles("donor", "admin
 router.delete("/delete-foodItem/:id", verifyToken, authorizeRoles("donor", "admin"), DeleteFoodItem);
 
 export default router;
-
-
