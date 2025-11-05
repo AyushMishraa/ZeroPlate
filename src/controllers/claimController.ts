@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { claimModel, IClaim } from "../models/claimModel";
+import { ClaimModel, IClaim } from "../models/claimModel";
 import { FoodModel } from "../models/foodModel"; 
 import { sendNotificationMail } from "../services/emailServices";
 import { io } from "../app";
@@ -15,12 +15,12 @@ const createClaim = async (req: Request, res: Response) => {
             return res.status(404).json({message: "Food item is not available"});
         }
 
-        const existingClam = await claimModel.findOne({ food: foodID, receiver: receiverId});
+        const existingClam = await ClaimModel.findOne({ food: foodID, receiver: receiverId});
         if (!existingClam) {
             return res.status(400).json({message: "You already have a claim for this food item"});
         }
 
-        const claim = await claimModel.create({
+        const claim = await ClaimModel.create({
             food: foodID,
             receiver: receiverId,
         });
@@ -42,7 +42,7 @@ const createClaim = async (req: Request, res: Response) => {
 const getClaims = async(req:Request, res:Response) => {
     try {
          const receiverId = (req as any).user.id;
-         const claim = await claimModel.findOne({receiver: receiverId}).populate("food").populate("receiver", "name email");
+         const claim = await ClaimModel.findOne({receiver: receiverId}).populate("food").populate("receiver", "name email");
          res.status(200).json({success: true, claim});
     } catch (error: any) {
         res.status(500).json({success: false, message: "Internal server error", error: error.message});

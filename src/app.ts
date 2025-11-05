@@ -9,6 +9,7 @@ import foodRoutes from "./routes/foodRoute";
 import { Server } from "socket.io";
 import http from "http";
 import claimRoutes from "./routes/claimRoutes";
+import adminDashboardRoutes from "./routes/adminDashboardRoutes";
 
 dotenv.config();
 connectToDb();
@@ -33,5 +34,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/foods", foodRoutes);
 app.use("/api/claims", claimRoutes);
+app.use("/api/admin", adminDashboardRoutes);
 
 export default app;

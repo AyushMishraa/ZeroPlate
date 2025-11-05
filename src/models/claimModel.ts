@@ -10,7 +10,7 @@ export interface IClaim extends mongoose.Document {
 
 const claimSchema = new mongoose.Schema({
     food: {
-        tpye: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Food",
         required: true,
     },
@@ -34,4 +34,4 @@ const claimSchema = new mongoose.Schema({
     }
 });
 
-export const claimModel = mongoose.model<IClaim>("Claim", claimSchema);
+export const ClaimModel = mongoose.model<IClaim>("Claim", claimSchema);
