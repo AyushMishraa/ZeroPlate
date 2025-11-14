@@ -9,6 +9,10 @@ export interface IUser extends mongoose.Document {
   role: "donor" | "receiver" | "admin";
   provider: "google" | "local";
   googleId?: string;
+  location: {
+    type: string;
+    coordinates: number[];
+  }
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -19,6 +23,18 @@ const userSchema = new mongoose.Schema<IUser>(
     role: { type: String, enum: ["donor", "receiver", "admin"], default: "receiver", required: true },
     provider: { type: String, enum: ["google", "local"], required: true, default: "local" },
     googleId: { type: String },
+     location: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            default: "Point"
+        },
+        coordinates: {
+            type: [Number],
+            required: true,
+
+        },
+    }
   },
   { timestamps: true }
 );

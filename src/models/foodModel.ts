@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { prependOnceListener } from "process";
 
 export interface FoodInterface extends mongoose.Document {
   title: string;
@@ -10,6 +11,10 @@ export interface FoodInterface extends mongoose.Document {
   updatedAt: Date;
   type: string;
   expirationDate: Date;
+  location: {
+    type: string;
+    coordinates: number[];
+  }
 }
 
 const foodSchema = new mongoose.Schema<FoodInterface>({
@@ -46,7 +51,19 @@ const foodSchema = new mongoose.Schema<FoodInterface>({
     pickupLocation: {
         type: String,
         required: true
-    }    
+    },
+    location: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            default: "Point"
+        },
+        coordinates: {
+            type: [Number],
+            required: true,
+
+        },
+    }
 });
 
 export const FoodModel = mongoose.model<FoodInterface>("Food", foodSchema);

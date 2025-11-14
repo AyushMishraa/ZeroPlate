@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { FoodInterface, FoodModel } from "../models/foodModel";
+import { findBestNGOsForFood } from "../services/matchingService";
+import { success } from "zod";
 
 const RegisterFood = async (req: Request, res: Response) => {
     try {
@@ -18,7 +20,16 @@ const RegisterFood = async (req: Request, res: Response) => {
             donor: donorId,
         });
         await food.save();
-        return res.status(201).json({ message: "Food registered successfully", food });
+        const bestNGOs = await findBestNGOsForFood(food.id);
+        console.log("bestNGOs", bestNGOs);
+        const topNGOs = bestNGOs.slice(0,3);
+        console.log("topNGOs", topNGOs);
+        return res.status(201).json({ 
+            success: true,
+            message: "Food registered successfully",
+            food,
+            recommendedNGOs:topNGOs
+       });
     } catch (error: any) {
         return res.status(500).json({ message: "Internal server error", error: error.message });
     }
