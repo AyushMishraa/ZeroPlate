@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { ClaimModel, IClaim } from "../models/claimModel";
+import { ClaimModel } from "../models/claimModel";
 import { FoodModel } from "../models/foodModel"; 
 import { sendNotificationMail } from "../services/emailServices";
 import { io } from "../app";
+import { pickupQueue } from "../queues/queue";
 
 
 const createClaim = async (req: Request, res: Response) => {
@@ -32,6 +33,12 @@ const createClaim = async (req: Request, res: Response) => {
 
         io.emit("claimCreated", claim);
         console.log("claim", {foodID, receiverId});
+
+        // Add a job to the pickup queue to send a reminder email after 1 hour
+        pickupQueue.add('sendPickupReminder',
+            { email: foodItem.donor.toString(), foodTitle: foodItem.title },
+            { delay: 60 * 60 * 1000 }
+        );
 
         return res.status(201).json({message: "Claim created successfully", claim});
     } catch (error: any) {
