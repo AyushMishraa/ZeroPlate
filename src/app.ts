@@ -1,4 +1,5 @@
 import express from "express";
+import helmet from "helmet";
 import dotenv from "dotenv";
 import passport from "passport";
 import cookieParser from "cookie-parser";
@@ -15,6 +16,7 @@ dotenv.config();
 connectToDb();
 
 const app = express();
+app.use(helmet());
 
 app.use(express.json());
 const server = http.createServer(app);

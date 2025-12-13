@@ -90,5 +90,69 @@ export const getTopDonors = async (req: Request, res: Response) => {
 }
 
 export const getFrauds = async (req: Request, res: Response) => {
+  try {
+    const recentMinutes = Number(req.query.recentMinutes ?? 60); // window for rapid claims
+    const rapidThreshold = Number(req.query.rapidThreshold ?? 5); // claims threshold
+    const now = new Date();
 
+    // 1) Duplicate claims (same user, same food) - find duplicates in claims collection
+    const duplicateClaims = await ClaimModel.aggregate([
+      {
+        $group: {
+          _id: { food: "$food", receiver: "$receiver" },
+          count: { $sum: 1 },
+          docs: { $push: "$$ROOT" }
+        }
+      },
+      { $match: { count: { $gt: 1 } } },
+      { $limit: 100 }
+    ]);
+
+    // 2) Rapid multi-claims: users with > rapidThreshold claims within recentMinutes
+    const windowStart = new Date(now.getTime() - recentMinutes * 60 * 1000);
+    const rapidClaimUsers = await ClaimModel.aggregate([
+      { $match: { createdAt: { $gte: windowStart } } },
+      {
+        $group: {
+          _id: "$receiver",
+          recentClaims: { $sum: 1 }
+        }
+      },
+      { $match: { recentClaims: { $gte: rapidThreshold } } },
+      { $limit: 100 }
+    ]);
+
+    // 3) Suspicious donors: donors with many donations but zero pickups (no claimed/picked_up)
+    const donorsAgg = await FoodModel.aggregate([
+      {
+        $group: {
+          _id: "$donor",
+          totalDonations: { $sum: 1 },
+          totalQuantity: { $sum: "$quantity" },
+          pickedUpCount: {
+            $sum: {
+              $cond: [{ $in: ["$status", ["picked_up"]] }, 1, 0]
+            }
+          }
+        }
+      },
+      { $match: { pickedUpCount: 0, totalDonations: { $gte: 10 } } }, // example rule
+      { $limit: 100 }
+    ]);
+
+    // Return results (we can further enrich with user details if needed)
+    res.json({
+      success: true,
+      data: {
+        duplicateClaimsCount: duplicateClaims.length,
+        duplicateClaims: duplicateClaims.slice(0, 10),
+        rapidClaimUsersCount: rapidClaimUsers.length,
+        rapidClaimUsers: rapidClaimUsers.slice(0, 10),
+        suspiciousDonorsCount: donorsAgg.length,
+        suspiciousDonors: donorsAgg.slice(0, 10)
+      }
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 }
