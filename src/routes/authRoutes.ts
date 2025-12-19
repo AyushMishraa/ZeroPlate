@@ -2,11 +2,12 @@ import express from "express";
 import passport from "../services/authService";
 import { generateToken } from "../utils/generateToken";
 import { signup, login } from "../controllers/authController";
+import { authLimiter } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
+router.post("/signup", authLimiter, signup);
+router.post("/login", authLimiter, login);
 
 router.get("/google", passport.authenticate("google", {scope: ["profile", "email"]}));
 
