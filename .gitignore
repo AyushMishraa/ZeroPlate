@@ -1,0 +1,152 @@
+# ============================================================================
+# COMMON RULES (Applied to entire project)
+# ============================================================================
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime & Process
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# ============================================================================
+# BACKEND-SPECIFIC RULES
+# ============================================================================
+
+# Node modules
+backend/node_modules/
+
+# Build output
+backend/dist/
+backend/build/
+
+# TypeScript
+backend/*.tsbuildinfo
+
+# Dependency directories
+backend/jspm_packages/
+backend/web_modules/
+
+# Cache files
+backend/.npm
+backend/.eslintcache
+backend/.stylelintcache
+backend/.node_repl_history
+backend/.cache
+backend/.parcel-cache
+
+# Other backend files
+backend/.tern-port
+backend/.serverless/
+backend/.fusebox/
+backend/.vscode-test
+backend/.vitepress/dist
+backend/.vitepress/cache
+
+# ============================================================================
+# FRONTEND-SPECIFIC RULES (Angular)
+# ============================================================================
+
+# Node modules
+frontend/node_modules/
+
+# Compiled output
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+frontend/bazel-out/
+
+# Angular cache
+frontend/.angular/cache/
+
+# TypeScript
+frontend/*.tsbuildinfo
+
+# Styles
+frontend/.sass-cache/
+
+# IDE cache
+frontend/.history/*
+
+# Build files
+frontend/testem.log
+frontend/typings/
+
+# Frontend specific cache
+frontend/.cache/
+frontend/.parcel-cache/
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/sdks
+!frontend/.yarn/versions
+
+# Other build tools
+frontend/connect.lock
+frontend/libpeerconnection.log
+frontend/vite.config.js.timestamp-*
+frontend/vite.config.ts.timestamp-*
+
+# ============================================================================
+# YARN/PNPM (Monorepo)
+# ============================================================================
+
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+
+# ============================================================================
+# MISC
+# ============================================================================
+
+*.tgz
+.dynamodb/
+.firebase/
+
+# System temp files
+Thumbs.db
+.vscode-test

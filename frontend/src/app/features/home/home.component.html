@@ -1,0 +1,148 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <!-- Navigation Bar -->
+  <mat-toolbar class="bg-white shadow-md">
+    <div class="flex items-center justify-between w-full px-4">
+      <div class="flex items-center space-x-2">
+        <mat-icon class="text-purple-600">restaurant</mat-icon>
+        <span class="text-2xl font-bold text-gray-800">ZeroPlate</span>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        @if (currentUser) {
+          <div class="flex items-center space-x-3">
+            <div class="text-right hidden md:block">
+              <p class="text-sm font-semibold text-gray-800">{{ currentUser.name }}</p>
+              <span [class]="'text-xs px-2 py-1 rounded-full ' + getRoleBadgeColor(currentUser.role)">
+                {{ getRoleLabel(currentUser.role) }}
+              </span>
+            </div>
+            <button 
+              mat-icon-button 
+              [matMenuTriggerFor]="userMenu"
+              class="text-gray-600">
+              <mat-icon>account_circle</mat-icon>
+            </button>
+            <mat-menu #userMenu="matMenu">
+              <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+              </button>
+            </mat-menu>
+          </div>
+        }
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-red-500">
+    <div class="absolute inset-0 bg-black opacity-10"></div>
+    <div class="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6 animate-fade-in">
+          Reduce Food Waste,
+          <span class="block text-yellow-300">Feed Communities</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+          Connect restaurants, supermarkets, and households with NGOs and food banks. 
+          Together, we can make a difference.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button mat-raised-button color="accent" class="text-lg px-8 py-3">
+            <mat-icon>add_circle</mat-icon>
+            <span class="ml-2">List Food</span>
+          </button>
+          <button mat-stroked-button class="text-lg px-8 py-3 bg-white/10 text-white border-white">
+            <mat-icon>search</mat-icon>
+            <span class="ml-2">Browse Food</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Section -->
+  <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      @for (stat of stats; track stat.label) {
+        <mat-card class="text-center p-6 hover:shadow-lg transition-shadow duration-300">
+          <div class="flex flex-col items-center">
+            <mat-icon [class]="'text-5xl mb-4 ' + stat.color">{{ stat.icon }}</mat-icon>
+            <h3 class="text-3xl font-bold text-gray-800 mb-2">{{ stat.value }}</h3>
+            <p class="text-gray-600">{{ stat.label }}</p>
+          </div>
+        </mat-card>
+      }
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-bold text-center text-gray-800 mb-4">How It Works</h2>
+      <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        ZeroPlate makes it easy to connect surplus food with those who need it most
+      </p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (feature of features; track feature.title) {
+          <mat-card class="p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div [class]="'w-16 h-16 rounded-full flex items-center justify-center mb-4 ' + feature.color">
+              <mat-icon class="text-white text-3xl">{{ feature.icon }}</mat-icon>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">{{ feature.title }}</h3>
+            <p class="text-gray-600">{{ feature.description }}</p>
+          </mat-card>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action Section -->
+  <div class="bg-gradient-to-r from-purple-600 to-pink-600 py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold text-white mb-4">Ready to Make a Difference?</h2>
+      <p class="text-xl text-white/90 mb-8">
+        Join thousands of organizations already reducing food waste and feeding communities
+      </p>
+      <button mat-raised-button color="accent" class="text-lg px-8 py-3">
+        Get Started Today
+        <mat-icon class="ml-2">arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">ZeroPlate</h3>
+          <p class="text-gray-400">
+            Connecting communities to reduce food waste and fight hunger.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-white">About Us</a></li>
+            <li><a href="#" class="hover:text-white">How It Works</a></li>
+            <li><a href="#" class="hover:text-white">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Connect</h4>
+          <div class="flex space-x-4">
+            <mat-icon class="cursor-pointer hover:text-purple-400">facebook</mat-icon>
+            <mat-icon class="cursor-pointer hover:text-purple-400">twitter</mat-icon>
+            <mat-icon class="cursor-pointer hover:text-purple-400">linkedin</mat-icon>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2024 ZeroPlate. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
