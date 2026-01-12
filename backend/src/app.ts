@@ -13,6 +13,7 @@ import { Server } from "socket.io";
 import http from "http";
 import claimRoutes from "./routes/claimRoutes";
 import adminDashboardRoutes from "./routes/adminDashboardRoutes";
+import analyticsRoutes from "./routes/analyticsRoutes";
 import { errorHandler } from "./middlewares/errorMiddleware";
 
 dotenv.config();
@@ -60,5 +61,6 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/foods", foodRoutes);
 app.use("/api/claims", claimRoutes);
 app.use("/api/admin", adminDashboardRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 export default app;
