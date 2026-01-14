@@ -163,6 +163,42 @@
   gap: 0.75rem;
 }
 
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle-btn {
+  color: #6b7280 !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  .theme-icon {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  
+  &:hover {
+    background: rgba(99, 102, 241, 0.08) !important;
+    color: #6366f1 !important;
+    transform: scale(1.05);
+  }
+  
+  &:active {
+    .theme-icon {
+      transform: rotate(180deg) scale(0.9);
+    }
+  }
+}
+
 .auth-buttons {
   display: flex;
   align-items: center;
@@ -1043,6 +1079,271 @@
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.875rem;
   font-family: 'Inter', sans-serif;
+}
+
+// ============================================
+// DARK MODE STYLES
+// ============================================
+
+:host-context(html.dark-mode) {
+  .home-container {
+    background: #0f172a;
+  }
+
+  .particles-container {
+    opacity: 0.15;
+  }
+
+  .particle {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+  }
+
+  .vector-arts {
+    opacity: 0.03;
+  }
+
+  .navbar {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .brand-text {
+    color: #f1f5f9;
+  }
+
+  .brand-icon {
+    color: #818cf8;
+  }
+
+  .nav-link {
+    color: #cbd5e1 !important;
+    
+    &:hover {
+      background: rgba(99, 102, 241, 0.15) !important;
+      color: #a5b4fc !important;
+    }
+    
+    &.active {
+      background: rgba(99, 102, 241, 0.2) !important;
+      color: #a5b4fc !important;
+    }
+  }
+
+  .theme-toggle-btn {
+    color: #cbd5e1 !important;
+    
+    &:hover {
+      background: rgba(99, 102, 241, 0.15) !important;
+      color: #a5b4fc !important;
+    }
+  }
+
+  .user-name {
+    color: #f1f5f9;
+  }
+
+  .user-menu-button {
+    color: #cbd5e1;
+    
+    &:hover {
+      color: #a5b4fc;
+    }
+  }
+
+  ::ng-deep .user-menu {
+    background: #1e293b !important;
+    
+    .menu-item {
+      color: #cbd5e1 !important;
+      
+      &:hover {
+        background: rgba(99, 102, 241, 0.15) !important;
+      }
+    }
+  }
+
+  .login-btn {
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+    
+    &:hover {
+      background: rgba(99, 102, 241, 0.1) !important;
+      border-color: #475569 !important;
+    }
+  }
+
+  .hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+
+  .hero-background {
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+  }
+
+  .hero-title-main,
+  .hero-title-gradient {
+    color: #f1f5f9;
+  }
+
+  .hero-subtitle {
+    color: #cbd5e1;
+  }
+
+  .hero-card {
+    background: rgba(30, 41, 59, 0.8);
+    color: #f1f5f9;
+  }
+
+  .features-section {
+    background: #0f172a;
+  }
+
+  .feature-card {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(99, 102, 241, 0.1);
+    
+    &:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 20px 25px rgba(99, 102, 241, 0.1);
+    }
+    
+    h3 {
+      color: #f1f5f9;
+    }
+    
+    p {
+      color: #cbd5e1;
+    }
+  }
+
+  .stats-section {
+    background: #0f172a;
+  }
+
+  .stat-card {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(99, 102, 241, 0.1);
+    
+    .stat-value {
+      color: #f1f5f9;
+    }
+    
+    .stat-label {
+      color: #cbd5e1;
+    }
+  }
+
+  .testimonials-section {
+    background: #0f172a;
+  }
+
+  .testimonial-card {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(99, 102, 241, 0.1);
+    
+    .testimonial-text {
+      color: #cbd5e1;
+    }
+    
+    .testimonial-name {
+      color: #f1f5f9;
+    }
+    
+    .testimonial-role {
+      color: #94a3b8;
+    }
+  }
+
+  .cta-section {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border-color: rgba(99, 102, 241, 0.2);
+  }
+
+  .cta-title {
+    color: #f1f5f9;
+  }
+
+  .cta-description {
+    color: #cbd5e1;
+  }
+
+  .footer {
+    background: #0a0f1c;
+    color: #cbd5e1;
+  }
+
+  .footer-section {
+    h4 {
+      color: #f1f5f9;
+    }
+    
+    a {
+      color: #cbd5e1;
+      
+      &:hover {
+        color: #a5b4fc;
+      }
+    }
+  }
+
+  .footer-bottom {
+    border-top-color: rgba(255, 255, 255, 0.1);
+    color: rgba(203, 213, 225, 0.6);
+  }
+
+  // Material components dark mode
+  ::ng-deep {
+    .mat-mdc-menu-panel {
+      background-color: #1e293b !important;
+    }
+
+    .mat-mdc-menu-item {
+      color: #cbd5e1 !important;
+
+      &:hover {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+      }
+    }
+
+    .mat-mdc-button {
+      &.nav-link {
+        color: #cbd5e1 !important;
+
+        &:hover {
+          background-color: rgba(99, 102, 241, 0.15) !important;
+        }
+      }
+    }
+
+    .mat-divider {
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .mat-chip-set {
+      .mat-chip {
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        color: #cbd5e1 !important;
+      }
+    }
+  }
+}
+
+// Smooth transition for theme changes
+.home-container,
+.navbar,
+.hero-section,
+.features-section,
+.stats-section,
+.testimonials-section,
+.cta-section,
+.footer,
+.feature-card,
+.stat-card,
+.testimonial-card,
+.hero-card {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 // Animations

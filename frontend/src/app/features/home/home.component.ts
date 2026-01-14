@@ -11,7 +11,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AuthService, User } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -27,13 +29,15 @@ import { AuthService, User } from '../../core/services/auth.service';
     MatChipsModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSlideToggleModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
   currentUser: User | null = null;
+  isDarkMode$ = this.themeService.isDarkMode$;
   stats = [
     { label: 'Food Saved', value: '1,234', icon: 'restaurant', color: 'text-green-600' },
     { label: 'Communities Fed', value: '567', icon: 'groups', color: 'text-blue-600' },
@@ -109,7 +113,8 @@ export class HomeComponent implements OnInit {
     public authService: AuthService,
     public router: Router,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -226,5 +231,9 @@ export class HomeComponent implements OnInit {
       default:
         return role;
     }
+  }
+
+  toggleDarkMode(): void {
+    this.themeService.toggleTheme();
   }
 }

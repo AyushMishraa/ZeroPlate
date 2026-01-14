@@ -95,6 +95,21 @@
       </nav>
       
       <div class="navbar-actions">
+        <!-- Dark Mode Toggle -->
+        <div class="theme-toggle-container">
+          <button 
+            mat-icon-button 
+            (click)="toggleDarkMode()"
+            class="theme-toggle-btn"
+            [attr.aria-label]="'Toggle dark mode'">
+            @if (isDarkMode$ | async) {
+              <mat-icon class="theme-icon">light_mode</mat-icon>
+            } @else {
+              <mat-icon class="theme-icon">dark_mode</mat-icon>
+            }
+          </button>
+        </div>
+
         @if (currentUser) {
           <div class="user-info">
             <div class="user-details">
