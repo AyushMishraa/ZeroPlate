@@ -1,0 +1,107 @@
+<div class="claims-container">
+    <div class="page-header">
+        <div>
+            <h1>My Claims</h1>
+            <p class="subtitle">Track your claimed food donations</p>
+        </div>
+        <a mat-raised-button color="primary" routerLink="/receiver/browse-food">
+            <mat-icon>add</mat-icon>
+            Browse Food
+        </a>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-container">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else {
+    <!-- Filter Chips -->
+    <div class="filter-section">
+        <mat-chip-set>
+            <mat-chip [highlighted]="selectedFilter === 'all'" (click)="filterBy('all')">
+                All ({{ getAllClaimsCount() }})
+            </mat-chip>
+            <mat-chip [highlighted]="selectedFilter === 'pending'" (click)="filterBy('pending')">
+                Pending ({{ getClaimCountByStatus('pending') }})
+            </mat-chip>
+            <mat-chip [highlighted]="selectedFilter === 'approved'" (click)="filterBy('approved')">
+                Approved ({{ getClaimCountByStatus('approved') }})
+            </mat-chip>
+            <mat-chip [highlighted]="selectedFilter === 'completed'" (click)="filterBy('completed')">
+                Completed ({{ getClaimCountByStatus('completed') }})
+            </mat-chip>
+        </mat-chip-set>
+    </div>
+
+    @if (filteredClaims.length > 0) {
+    <div class="claims-grid">
+        @for (claim of filteredClaims; track claim._id) {
+        <mat-card class="claim-card">
+            <div class="card-header">
+                <span [class]="'status-badge ' + claim.status">
+                    {{ claim.status | titlecase }}
+                </span>
+                <mat-icon [class]="'status-icon ' + claim.status">
+                    {{ getStatusIcon(claim.status) }}
+                </mat-icon>
+            </div>
+
+            <h3>{{ getFoodTitle(claim) }}</h3>
+
+            <div class="claim-details">
+                <div class="detail-row">
+                    <mat-icon>inventory</mat-icon>
+                    <span>{{ getFoodQuantity(claim) }} servings</span>
+                </div>
+                <div class="detail-row">
+                    <mat-icon>person</mat-icon>
+                    <span>Donor: {{ getDonorName(claim) }}</span>
+                </div>
+                <div class="detail-row">
+                    <mat-icon>place</mat-icon>
+                    <span>{{ getPickupLocation(claim) }}</span>
+                </div>
+                <div class="detail-row">
+                    <mat-icon>date_range</mat-icon>
+                    <span>Claimed {{ formatDate(claim.createdAt) }}</span>
+                </div>
+            </div>
+
+            @if (claim.status === 'pending') {
+            <div class="claim-message">
+                <mat-icon>info</mat-icon>
+                <span>Waiting for donor confirmation</span>
+            </div>
+            } @else if (claim.status === 'approved') {
+            <div class="claim-message success">
+                <mat-icon>check_circle</mat-icon>
+                <span>Ready for pickup!</span>
+            </div>
+            }
+        </mat-card>
+        }
+    </div>
+    } @else {
+    <div class="empty-state">
+        <mat-icon>inbox</mat-icon>
+        <h2>No claims found</h2>
+        <p>
+            @if (selectedFilter !== 'all') {
+            No claims with status "{{ selectedFilter }}"
+            } @else {
+            You haven't claimed any food yet
+            }
+        </p>
+        @if (selectedFilter === 'all') {
+        <a mat-raised-button color="primary" routerLink="/receiver/browse-food">
+            Browse Available Food
+        </a>
+        } @else {
+        <button mat-raised-button (click)="filterBy('all')">
+            Show All Claims
+        </button>
+        }
+    </div>
+    }
+    }
+</div>

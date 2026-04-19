@@ -1,0 +1,103 @@
+<div class="analytics-container">
+    <div class="page-header">
+        <h1>Platform Analytics</h1>
+        <a mat-button routerLink="/admin/dashboard">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Dashboard
+        </a>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-container">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else {
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+        <mat-card class="summary-card">
+            <mat-icon>restaurant</mat-icon>
+            <h3>{{ summary?.totalDonations || 0 }}</h3>
+            <p>Total Donations</p>
+        </mat-card>
+
+        <mat-card class="summary-card">
+            <mat-icon>shopping_basket</mat-icon>
+            <h3>{{ summary?.totalClaims || 0 }}</h3>
+            <p>Total Claims</p>
+        </mat-card>
+
+        <mat-card class="summary-card">
+            <mat-icon>set_meal</mat-icon>
+            <h3>{{ summary?.totalMealsSaved || 0 }}</h3>
+            <p>Meals Saved</p>
+        </mat-card>
+
+        <mat-card class="summary-card">
+            <mat-icon>person</mat-icon>
+            <h3>{{ summary?.activeDonors || 0 }}</h3>
+            <p>Active Donors</p>
+        </mat-card>
+
+        <mat-card class="summary-card">
+            <mat-icon>volunteer_activism</mat-icon>
+            <h3>{{ summary?.activeReceivers || 0 }}</h3>
+            <p>Active Receivers</p>
+        </mat-card>
+
+        <mat-card class="summary-card impact">
+            <mat-icon>eco</mat-icon>
+            <h3>{{ calculateCO2() }} kg</h3>
+            <p>CO₂ Saved</p>
+        </mat-card>
+    </div>
+
+    <!-- Top Donors Table -->
+    <mat-card class="donors-card">
+        <h2>Top Donors</h2>
+        @if (topDonors.length > 0) {
+        <div class="table-container">
+            <table mat-table [dataSource]="topDonors" class="donors-table">
+                <ng-container matColumnDef="rank">
+                    <th mat-header-cell *matHeaderCellDef>Rank</th>
+                    <td mat-cell *matCellDef="let donor; let i = index">
+                        <span class="rank-badge">{{ i + 1 }}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Donor Name</th>
+                    <td mat-cell *matCellDef="let donor">{{ donor.donor.name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef>Email</th>
+                    <td mat-cell *matCellDef="let donor">{{ donor.donor.email }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="donations">
+                    <th mat-header-cell *matHeaderCellDef>Donations</th>
+                    <td mat-cell *matCellDef="let donor">
+                        <strong>{{ donor.donationsCount }}</strong>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef>Total Servings</th>
+                    <td mat-cell *matCellDef="let donor">
+                        <span class="quantity-badge">{{ donor.totalQuantity }}</span>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        } @else {
+        <div class="empty-state">
+            <mat-icon>people</mat-icon>
+            <p>No donor data available</p>
+        </div>
+        }
+    </mat-card>
+    }
+</div>

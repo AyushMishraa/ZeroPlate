@@ -23,10 +23,10 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+    origin: 'http://localhost:4200',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(helmet());
@@ -42,7 +42,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 export const io = new Server(server, {
-    cors: {origin: "*"}
+    cors: { origin: "http://localhost:4200", credentials: true }
 });
 io.on("connection", (socket) => {
     console.log("New client connected: ", socket.id);

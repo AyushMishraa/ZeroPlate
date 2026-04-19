@@ -1,123 +1,139 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { Router } from '@angular/router';
-
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'donor' | 'receiver' | 'admin';
-  provider: 'google' | 'local';
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface SignupRequest {
-  name: string;
-  email: string;
-  password: string;
-  role: 'donor' | 'receiver' | 'admin';
-  provider: 'local';
-}
-
-export interface AuthResponse {
-  message: string;
-  user?: User;
-  token?: string;
-}
+import { Observable, tap, BehaviorSubject } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { User, AuthResponse, LoginCredentials, RegisterData } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '/api/auth';
+  private readonly TOKEN_KEY = 'zp_token';
+  private readonly USER_KEY = 'zp_user';
+  
+  // Using Angular signals for reactive state management
+  currentUser = signal<User | null>(null);
+  isAuthenticated = signal<boolean>(false);
+  
+  // Backward compatible BehaviorSubject
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) {
-    this.loadUserFromStorage();
+    this.loadStoredUser();
   }
 
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials, { withCredentials: true }).pipe(
-      tap(response => {
-        if (response.user) {
-          this.setUser(response.user);
-          // Token is set in httpOnly cookie by backend, but we store user info
-        }
-      })
-    );
-  }
-
-  signup(userData: SignupRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, userData, { withCredentials: true }).pipe(
-      tap(response => {
-        // Backend may return user in response or we may need to login after signup
-        // For now, if user is in response, store it
-        if (response.user) {
-          this.setUser(response.user);
-        }
-      })
-    );
-  }
-
-  logout(): void {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
-  }
-
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.currentUserSubject.value;
-  }
-
-  getToken(): string | null {
-    // Token is stored in httpOnly cookie by backend
-    // For API calls, we rely on withCredentials: true
-    return null; // Token is in httpOnly cookie
-  }
-
-  setUser(user: User): void {
-    this.currentUserSubject.next(user);
-    localStorage.setItem('user', JSON.stringify(user));
-  }
-
-  getUser(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  updateUserRole(userId: string, role: 'donor' | 'receiver'): Observable<AuthResponse> {
-    return this.http.put<AuthResponse>(`${this.apiUrl}/update-role`, { userId, role }, { withCredentials: true }).pipe(
-      tap(response => {
-        if (response.user) {
-          this.setUser(response.user);
-        }
-      })
-    );
-  }
-
-  private loadUserFromStorage(): void {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
+  private loadStoredUser(): void {
+    const token = this.getToken();
+    const userJson = localStorage.getItem(this.USER_KEY);
+    
+    if (token && userJson) {
       try {
-        const user = JSON.parse(userStr);
-        this.currentUserSubject.next(user);
-      } catch (e) {
-        localStorage.removeItem('user');
+        const user = JSON.parse(userJson);
+        this.setCurrentUser(user);
+      } catch (error) {
+        this.clearSession();
       }
     }
   }
-}
 
+  private setCurrentUser(user: User): void {
+    this.currentUser.set(user);
+    this.currentUserSubject.next(user);
+    this.isAuthenticated.set(true);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  getRole(): string | null {
+    return this.currentUser()?.role || null;
+  }
+
+  getUserId(): string | null {
+    return this.currentUser()?._id || null;
+  }
+
+  // Authentication API calls
+  login(credentials: LoginCredentials): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
+      .pipe(
+        tap(response => {
+          if (response.user && response.user.token) {
+            this.saveSession(response.user.token, response.user);
+          }
+        })
+      );
+  }
+
+  register(data: RegisterData): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/signup`, {
+      ...data,
+      provider: 'local'
+    }).pipe(
+      tap(response => {
+        if (response.user && response.user.token) {
+          this.saveSession(response.user.token, response.user);
+        }
+      })
+    );
+  }
+
+  googleLogin(): void {
+    window.location.href = `${environment.apiUrl}/auth/google`;
+  }
+
+  handleGoogleCallback(user: User, token: string): void {
+    this.saveSession(token, user);
+    this.redirectAfterLogin();
+  }
+
+  updateRole(role: 'donor' | 'receiver' | 'admin'): Observable<any> {
+    const userId = this.getUserId();
+    return this.http.put(`${environment.apiUrl}/auth/update-role`, { role })
+      .pipe(
+        tap(() => {
+          const user = this.currentUser();
+          if (user) {
+            const updatedUser = { ...user, role };
+            this.setCurrentUser(updatedUser);
+            localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+          }
+        })
+      );
+  }
+
+  private saveSession(token: string, user: User): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    this.setCurrentUser(user);
+  }
+
+  clearSession(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USER_KEY);
+    this.currentUser.set(null);
+    this.currentUserSubject.next(null);
+    this.isAuthenticated.set(false);
+  }
+
+  logout(): void {
+    this.clearSession();
+    this.router.navigate(['/auth/login']);
+  }
+
+  redirectAfterLogin(): void {
+    const role = this.getRole();
+    const routes: Record<string, string> = {
+      'donor': '/donor/dashboard',
+      'receiver': '/receiver/dashboard',
+      'admin': '/admin/dashboard'
+    };
+    this.router.navigate([routes[role as string] || '/']);
+  }
+}

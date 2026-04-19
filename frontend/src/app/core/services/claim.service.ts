@@ -1,45 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Claim {
-  _id?: string;
-  food: string | any;
-  receiver: string | any;
-  status: 'pending' | 'approved' | 'rejected' | 'completed';
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-}
+import { environment } from '../../../environments/environment';
+import { Claim, ClaimResponse } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClaimService {
-  private apiUrl = '/api/claims';
+  private apiUrl = `${environment.apiUrl}/claims`;
 
   constructor(private http: HttpClient) {}
 
-  createClaim(foodId: string): Observable<{ message: string; claim: Claim }> {
-    return this.http.post<{ message: string; claim: Claim }>(
-      `${this.apiUrl}/`,
-      { foodId },
-      { withCredentials: true }
-    );
+  // Create a new claim (receivers only)
+  createClaim(foodId: string): Observable<ClaimResponse> {
+    return this.http.post<ClaimResponse>(this.apiUrl, { foodId });
   }
 
-  getClaims(): Observable<{ success: boolean; claims: Claim[] }> {
-    return this.http.get<{ success: boolean; claims: Claim[] }>(
-      `${this.apiUrl}/`,
-      { withCredentials: true }
-    );
+  // Get all my claims (receivers only)
+  getMyClaims(): Observable<ClaimResponse> {
+    return this.http.get<ClaimResponse>(this.apiUrl);
   }
 
-  getAllClaims(): Observable<{ success: boolean; claims: Claim[] }> {
-    // This might need to be implemented in backend for admin
-    return this.http.get<{ success: boolean; claims: Claim[] }>(
-      `${this.apiUrl}/all`,
-      { withCredentials: true }
-    );
+  // Get all claims (admin only)
+  getAllClaims(): Observable<ClaimResponse> {
+    return this.http.get<ClaimResponse>(`${this.apiUrl}/all`);
   }
 }
-

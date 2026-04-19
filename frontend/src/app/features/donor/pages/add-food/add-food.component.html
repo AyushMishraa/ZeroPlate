@@ -1,0 +1,134 @@
+<div class="add-food-container">
+    <mat-card class="add-food-card">
+        <div class="card-header">
+            <div>
+                <h1>Add Food Donation</h1>
+                <p class="subtitle">List your surplus food to help reduce waste</p>
+            </div>
+            <button mat-icon-button routerLink="/donor/dashboard">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+            <!-- Food Details -->
+            <div class="form-section">
+                <h3>Food Details</h3>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Food Title</mat-label>
+                    <input matInput formControlName="title" placeholder="e.g., Fresh Vegetables, Cooked Biryani">
+                    <mat-icon matPrefix>restaurant_menu</mat-icon>
+                    @if (foodForm.get('title')?.hasError('required') && foodForm.get('title')?.touched) {
+                    <mat-error>Title is required</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Food Type (Optional)</mat-label>
+                    <input matInput formControlName="type" placeholder="e.g., Cooked, Raw, Packaged">
+                    <mat-icon matPrefix>category</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Quantity (servings)</mat-label>
+                    <input matInput type="number" formControlName="quantity" placeholder="e.g., 50">
+                    <mat-icon matPrefix>inventory</mat-icon>
+                    @if (foodForm.get('quantity')?.hasError('required') && foodForm.get('quantity')?.touched) {
+                    <mat-error>Quantity is required</mat-error>
+                    }
+                    @if (foodForm.get('quantity')?.hasError('min') && foodForm.get('quantity')?.touched) {
+                    <mat-error>Quantity must be at least 1</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Expiration Date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="expirationDate" [min]="minDate">
+                    <mat-icon matPrefix>event</mat-icon>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    @if (foodForm.get('expirationDate')?.hasError('required') &&
+                    foodForm.get('expirationDate')?.touched) {
+                    <mat-error>Expiration date is required</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <!-- Location Details -->
+            <div class="form-section">
+                <h3>Pickup Location</h3>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Pickup Address</mat-label>
+                    <textarea matInput formControlName="pickupLocation" rows="2"
+                        placeholder="Full pickup address"></textarea>
+                    <mat-icon matPrefix>place</mat-icon>
+                    @if (foodForm.get('pickupLocation')?.hasError('required') &&
+                    foodForm.get('pickupLocation')?.touched) {
+                    <mat-error>Pickup location is required</mat-error>
+                    }
+                </mat-form-field>
+
+                <div class="coordinates-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Latitude</mat-label>
+                        <input matInput type="number" formControlName="latitude" step="any">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Longitude</mat-label>
+                        <input matInput type="number" formControlName="longitude" step="any">
+                    </mat-form-field>
+                </div>
+
+                <button mat-stroked-button type="button" (click)="getCurrentLocation()" class="full-width"
+                    [disabled]="isLoadingLocation">
+                    @if (isLoadingLocation) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    } @else {
+                    <mat-icon>my_location</mat-icon>
+                    Use Current Location
+                    }
+                </button>
+            </div>
+
+            <!-- Recommended NGOs Info -->
+            @if (recommendedNGOs.length > 0) {
+            <div class="form-section recommended-section">
+                <h3>Recommended NGOs</h3>
+                <p class="info-text">
+                    <mat-icon>info</mat-icon>
+                    These NGOs will be notified about your food donation
+                </p>
+                <div class="ngo-list">
+                    @for (ngo of recommendedNGOs; track ngo.id) {
+                    <div class="ngo-item">
+                        <mat-icon>volunteer_activism</mat-icon>
+                        <div>
+                            <strong>{{ ngo.name }}</strong>
+                            <p>{{ ngo.distance }} km away</p>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button mat-button type="button" routerLink="/donor/dashboard" [disabled]="isLoading">
+                    Cancel
+                </button>
+                <button mat-raised-button color="primary" type="submit" [disabled]="foodForm.invalid || isLoading">
+                    @if (isLoading) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    } @else {
+                    <mat-icon>add</mat-icon>
+                    Add Food Item
+                    }
+                </button>
+            </div>
+        </form>
+    </mat-card>
+</div>

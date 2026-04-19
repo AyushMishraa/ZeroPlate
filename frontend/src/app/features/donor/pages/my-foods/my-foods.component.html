@@ -1,0 +1,119 @@
+<div class="my-foods-container">
+    <div class="page-header">
+        <div>
+            <h1>My Food Listings</h1>
+            <p class="subtitle">Manage your food donations</p>
+        </div>
+        <a mat-raised-button color="primary" routerLink="/donor/add-food">
+            <mat-icon>add</mat-icon>
+            Add Food Item
+        </a>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-container">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else {
+    <!-- Filter Chips -->
+    <div class="filter-section">
+        <mat-chip-set>
+            <mat-chip [highlighted]="selectedFilter === 'all'" (click)="filterBy('all')">
+                All ({{ getFoodCountByStatus('all') }})
+            </mat-chip>
+            <mat-chip [highlighted]="selectedFilter === 'available'" (click)="filterBy('available')">
+                Available ({{ getFoodCountByStatus('available') }})
+            </mat-chip>
+            <mat-chip [highlighted]="selectedFilter === 'claimed'" (click)="filterBy('claimed')">
+                Claimed ({{ getFoodCountByStatus('claimed') }})
+            </mat-chip>
+            <mat-chip [highlighted]="selectedFilter === 'picked_up'" (click)="filterBy('picked_up')">
+                Picked Up ({{ getFoodCountByStatus('picked_up') }})
+            </mat-chip>
+            <mat-chip [highlighted]="selectedFilter === 'expired'" (click)="filterBy('expired')">
+                Expired ({{ getFoodCountByStatus('expired') }})
+            </mat-chip>
+        </mat-chip-set>
+    </div>
+
+    <!-- Foods Grid -->
+    @if (filteredFoods.length > 0) {
+    <div class="foods-grid">
+        @for (food of filteredFoods; track food._id) {
+        <mat-card class="food-card">
+            <div class="card-header">
+                <span [class]="'status-badge ' + food.status">
+                    {{ food.status | titlecase }}
+                </span>
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="editFood(food)">
+                        <mat-icon>edit</mat-icon>
+                        <span>Edit</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteFood(food)" class="delete-button">
+                        <mat-icon>delete</mat-icon>
+                        <span>Delete</span>
+                    </button>
+                </mat-menu>
+            </div>
+
+            <div class="card-content">
+                <div class="food-icon">
+                    <mat-icon>restaurant_menu</mat-icon>
+                </div>
+
+                <h3>{{ food.title }}</h3>
+
+                @if (food.type) {
+                <p class="food-type">{{ food.type }}</p>
+                }
+
+                <div class="food-details">
+                    <div class="detail-row">
+                        <mat-icon>inventory</mat-icon>
+                        <span>{{ food.quantity }} servings</span>
+                    </div>
+                    <div class="detail-row">
+                        <mat-icon>schedule</mat-icon>
+                        <span>Expires {{ formatDate(food.expirationDate) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <mat-icon>place</mat-icon>
+                        <span>{{ food.pickupLocation }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <mat-icon>date_range</mat-icon>
+                        <span>Listed {{ formatDate(food.createdAt) }}</span>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        }
+    </div>
+    } @else {
+    <div class="empty-state">
+        <mat-icon>restaurant</mat-icon>
+        <h2>No {{ selectedFilter !== 'all' ? selectedFilter : '' }} food items</h2>
+        <p>
+            @if (selectedFilter === 'all') {
+            You haven't listed any food items yet.
+            } @else {
+            No items with status "{{ selectedFilter }}".
+            }
+        </p>
+        @if (selectedFilter === 'all') {
+        <a mat-raised-button color="primary" routerLink="/donor/add-food">
+            Add Your First Item
+        </a>
+        } @else {
+        <button mat-raised-button (click)="filterBy('all')">
+            Show All Items
+        </button>
+        }
+    </div>
+    }
+    }
+</div>

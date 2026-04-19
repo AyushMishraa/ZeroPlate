@@ -1,0 +1,144 @@
+<div class="register-container">
+    <mat-card class="register-card">
+        <div class="logo">
+            <mat-icon>restaurant</mat-icon>
+            <h1>ZeroPlate</h1>
+        </div>
+
+        <h2>Create Account</h2>
+        <p class="subtitle">Join the food waste reduction movement</p>
+
+        <mat-stepper [linear]="true" #stepper>
+            <!-- Step 1: Account Details -->
+            <mat-step [stepControl]="accountForm">
+                <form [formGroup]="accountForm">
+                    <ng-template matStepLabel>Account Details</ng-template>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Full Name</mat-label>
+                        <input matInput formControlName="name" placeholder="John Doe">
+                        <mat-icon matPrefix>person</mat-icon>
+                        @if (accountForm.get('name')?.hasError('required') && accountForm.get('name')?.touched) {
+                        <mat-error>Name is required</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" formControlName="email" placeholder="your@email.com">
+                        <mat-icon matPrefix>email</mat-icon>
+                        @if (accountForm.get('email')?.hasError('required') && accountForm.get('email')?.touched) {
+                        <mat-error>Email is required</mat-error>
+                        }
+                        @if (accountForm.get('email')?.hasError('email') && accountForm.get('email')?.touched) {
+                        <mat-error>Invalid email format</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Password</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                        <mat-icon matPrefix>lock</mat-icon>
+                        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        @if (accountForm.get('password')?.hasError('required') && accountForm.get('password')?.touched)
+                        {
+                        <mat-error>Password is required</mat-error>
+                        }
+                        @if (accountForm.get('password')?.hasError('minlength') && accountForm.get('password')?.touched)
+                        {
+                        <mat-error>Password must be at least 6 characters</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <div class="step-actions">
+                        <button mat-raised-button color="primary" matStepperNext [disabled]="accountForm.invalid">
+                            Next
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <!-- Step 2: Role Selection -->
+            <mat-step [stepControl]="roleForm">
+                <form [formGroup]="roleForm">
+                    <ng-template matStepLabel>Select Role</ng-template>
+
+                    <p class="role-description">Choose how you want to participate:</p>
+
+                    <div class="role-cards">
+                        <div class="role-card" [class.selected]="roleForm.get('role')?.value === 'donor'"
+                            (click)="selectRole('donor')">
+                            <mat-icon>storefront</mat-icon>
+                            <h3>Donor</h3>
+                            <p>I have surplus food to donate</p>
+                        </div>
+
+                        <div class="role-card" [class.selected]="roleForm.get('role')?.value === 'receiver'"
+                            (click)="selectRole('receiver')">
+                            <mat-icon>volunteer_activism</mat-icon>
+                            <h3>Receiver (NGO)</h3>
+                            <p>I want to claim food donations</p>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-raised-button color="primary" matStepperNext [disabled]="roleForm.invalid">
+                            Next
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <!-- Step 3: Location -->
+            <mat-step [stepControl]="locationForm">
+                <form [formGroup]="locationForm">
+                    <ng-template matStepLabel>Location</ng-template>
+
+                    <p class="location-description">We use your location to match you with nearby opportunities</p>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Latitude</mat-label>
+                        <input matInput type="number" formControlName="latitude" step="any">
+                        <mat-icon matPrefix>place</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Longitude</mat-label>
+                        <input matInput type="number" formControlName="longitude" step="any">
+                        <mat-icon matPrefix>place</mat-icon>
+                    </mat-form-field>
+
+                    <button mat-stroked-button type="button" (click)="getCurrentLocation()" class="full-width"
+                        [disabled]="isLoadingLocation">
+                        @if (isLoadingLocation) {
+                        <mat-spinner diameter="20"></mat-spinner>
+                        } @else {
+                        <mat-icon>my_location</mat-icon>
+                        Use Current Location
+                        }
+                    </button>
+
+                    <div class="step-actions">
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-raised-button color="primary" (click)="onSubmit()"
+                            [disabled]="locationForm.invalid || isLoading">
+                            @if (isLoading) {
+                            <mat-spinner diameter="20"></mat-spinner>
+                            } @else {
+                            Create Account
+                            }
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+        </mat-stepper>
+
+        <div class="login-link">
+            Already have an account?
+            <a routerLink="/auth/login">Sign in</a>
+        </div>
+    </mat-card>
+</div>

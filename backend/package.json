@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
+    "debug": "nodemon --inspect=9229 src/server.ts",
     "build": "tsc",
     "start": "node dist/server.ts"
   },

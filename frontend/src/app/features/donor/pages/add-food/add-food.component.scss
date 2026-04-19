@@ -1,0 +1,138 @@
+  .add-food-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+  }
+
+  .add-food-card {
+      padding: 32px;
+  }
+
+  .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+
+      h1 {
+          margin: 0 0 8px;
+          font-size: 2rem;
+          color: #333;
+      }
+
+      .subtitle {
+          margin: 0;
+          color: #666;
+      }
+  }
+
+  .form-section {
+      margin-bottom: 32px;
+
+      h3 {
+          margin: 0 0 20px;
+          font-size: 1.25rem;
+          color: #333;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          &:before {
+              content: '';
+              width: 4px;
+              height: 24px;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              border-radius: 2px;
+          }
+      }
+  }
+
+  .full-width {
+      width: 100%;
+  }
+
+  mat-form-field {
+      margin-bottom: 16px;
+  }
+
+  .coordinates-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+  }
+
+  .recommended-section {
+      background: #f5f5ff;
+      padding: 24px;
+      border-radius: 8px;
+      border: 2px solid #667eea;
+
+      .info-text {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #666;
+          margin: 0 0 16px;
+          font-size: 0.875rem;
+
+          mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+              color: #667eea;
+          }
+      }
+  }
+
+  .ngo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+  }
+
+  .ngo-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+
+      mat-icon {
+          color: #667eea;
+      }
+
+      strong {
+          display: block;
+          margin-bottom: 4px;
+      }
+
+      p {
+          margin: 0;
+          font-size: 0.875rem;
+          color: #666;
+      }
+  }
+
+  .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #e0e0e0;
+  }
+
+  @media (max-width: 768px) {
+      .add-food-card {
+          padding: 24px 16px;
+      }
+
+      .card-header h1 {
+          font-size: 1.5rem;
+      }
+
+      .coordinates-row {
+          grid-template-columns: 1fr;
+      }
+  }

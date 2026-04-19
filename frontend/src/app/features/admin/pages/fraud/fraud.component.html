@@ -1,0 +1,129 @@
+<div class="fraud-container">
+    <div class="page-header">
+        <div>
+            <h1>Fraud Detection</h1>
+            <p class="subtitle">Monitor suspicious activity on the platform</p>
+        </div>
+        <a mat-button routerLink="/admin/dashboard">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Dashboard
+        </a>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-container">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else {
+    <!-- Alert Summary -->
+    <div class="alerts-summary">
+        <mat-card class="alert-card" [class.has-alerts]="fraudData!.duplicateClaimsCount > 0">
+            <div class="alert-header">
+                <mat-icon>content_copy</mat-icon>
+                <h3>Duplicate Claims</h3>
+            </div>
+            <p class="alert-count">{{ fraudData!.duplicateClaimsCount }}</p>
+            <p class="alert-description">Users with duplicate claims detected</p>
+        </mat-card>
+
+        <mat-card class="alert-card" [class.has-alerts]="fraudData!.rapidClaimUsersCount > 0">
+            <div class="alert-header">
+                <mat-icon>speed</mat-icon>
+                <h3>Rapid Claims</h3>
+            </div>
+            <p class="alert-count">{{ fraudData!.rapidClaimUsersCount }}</p>
+            <p class="alert-description">Users making rapid multiple claims</p>
+        </mat-card>
+
+        <mat-card class="alert-card" [class.has-alerts]="fraudData!.suspiciousDonorsCount > 0">
+            <div class="alert-header">
+                <mat-icon>warning</mat-icon>
+                <h3>Suspicious Donors</h3>
+            </div>
+            <p class="alert-count">{{ fraudData!.suspiciousDonorsCount }}</p>
+            <p class="alert-description">Donors with zero pickups despite donations</p>
+        </mat-card>
+    </div>
+
+    <!-- Detailed Reports -->
+    @if (fraudData!.duplicateClaimsCount > 0) {
+    <mat-card class="detail-card">
+        <h2>
+            <mat-icon>content_copy</mat-icon>
+            Duplicate Claims Details
+        </h2>
+        <p class="warning-text">
+            The following users have claimed the same food item multiple times:
+        </p>
+        <div class="fraud-list">
+            @for (claim of fraudData!.duplicateClaims; track $index) {
+            <div class="fraud-item">
+                <mat-icon class="warning-icon">error</mat-icon>
+                <div class="fraud-details">
+                    <p><strong>User ID:</strong> {{ claim._id }}</p>
+                    <p><strong>Claims Count:</strong> {{ claim.count }}</p>
+                </div>
+            </div>
+            }
+        </div>
+    </mat-card>
+    }
+
+    @if (fraudData!.rapidClaimUsersCount > 0) {
+    <mat-card class="detail-card">
+        <h2>
+            <mat-icon>speed</mat-icon>
+            Rapid Claim Activity
+        </h2>
+        <p class="warning-text">
+            The following users have made unusually rapid claims:
+        </p>
+        <div class="fraud-list">
+            @for (user of fraudData!.rapidClaimUsers; track $index) {
+            <div class="fraud-item">
+                <mat-icon class="warning-icon">warning</mat-icon>
+                <div class="fraud-details">
+                    <p><strong>User ID:</strong> {{ user._id }}</p>
+                    <p><strong>Recent Claims:</strong> {{ user.recentClaims }}</p>
+                </div>
+            </div>
+            }
+        </div>
+    </mat-card>
+    }
+
+    @if (fraudData!.suspiciousDonorsCount > 0) {
+    <mat-card class="detail-card">
+        <h2>
+            <mat-icon>warning</mat-icon>
+            Suspicious Donor Activity
+        </h2>
+        <p class="warning-text">
+            The following donors have listings but zero successful pickups:
+        </p>
+        <div class="fraud-list">
+            @for (donor of fraudData!.suspiciousDonors; track $index) {
+            <div class="fraud-item">
+                <mat-icon class="warning-icon">report_problem</mat-icon>
+                <div class="fraud-details">
+                    <p><strong>Donor ID:</strong> {{ donor._id }}</p>
+                    <p><strong>Total Donations:</strong> {{ donor.totalDonations }}</p>
+                    <p><strong>Total Quantity:</strong> {{ donor.totalQuantity }}</p>
+                    <p><strong>Picked Up:</strong> {{ donor.pickedUpCount }}</p>
+                </div>
+            </div>
+            }
+        </div>
+    </mat-card>
+    }
+
+    @if (fraudData!.duplicateClaimsCount === 0 && fraudData!.rapidClaimUsersCount === 0 &&
+    fraudData!.suspiciousDonorsCount === 0) {
+    <mat-card class="no-fraud-card">
+        <mat-icon>verified</mat-icon>
+        <h2>All Clear!</h2>
+        <p>No suspicious activity detected at this time.</p>
+    </mat-card>
+    }
+    }
+</div>

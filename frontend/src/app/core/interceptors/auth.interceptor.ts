@@ -1,12 +1,16 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // Token is stored in httpOnly cookie, so we use withCredentials
-  // The backend will automatically read the cookie
-  req = req.clone({
-    withCredentials: true
-  });
-
+  const token = localStorage.getItem('zp_token');
+  
+  if (token) {
+    const clonedReq = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return next(clonedReq);
+  }
+  
   return next(req);
 };
-

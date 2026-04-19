@@ -1,0 +1,121 @@
+.login-container {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 48px 32px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    color: #667eea;
+
+    mat-icon {
+        font-size: 2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin: 0;
+    }
+}
+
+h2 {
+    text-align: center;
+    margin: 0 0 8px;
+    font-size: 1.75rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin: 0 0 32px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+mat-form-field {
+    margin-bottom: 16px;
+}
+
+.submit-button {
+    height: 48px;
+    font-size: 1rem;
+    margin-top: 8px;
+
+    mat-spinner {
+        margin: 0 auto;
+    }
+}
+
+.divider {
+    margin: 24px 0;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e0e0e0;
+    }
+}
+
+.divider-text {
+    background: white;
+    padding: 0 16px;
+    position: relative;
+    color: #999;
+    font-size: 0.875rem;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.google-button {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1rem;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 24px;
+    color: #666;
+
+    a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        margin-left: 4px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

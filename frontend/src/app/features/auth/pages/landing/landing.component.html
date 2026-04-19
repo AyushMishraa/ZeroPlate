@@ -1,0 +1,94 @@
+<div class="landing-page">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <mat-icon class="hero-icon">restaurant</mat-icon>
+                ZeroPlate
+            </h1>
+            <p class="hero-subtitle">Connecting Food Donors with Those in Need</p>
+            <p class="hero-description">
+                Join our mission to reduce food waste by connecting restaurants, supermarkets,
+                and households with NGOs and food banks. Every meal saved makes a difference.
+            </p>
+            <div class="hero-actions">
+                <a mat-raised-button color="primary" routerLink="/auth/register" class="cta-button">
+                    Get Started
+                </a>
+                <a mat-stroked-button routerLink="/auth/login" class="cta-button-secondary">
+                    Sign In
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="section-title">How It Works</h2>
+        <div class="features-grid">
+            <mat-card class="feature-card">
+                <mat-icon class="feature-icon donor">storefront</mat-icon>
+                <h3>For Donors</h3>
+                <p>List your surplus food quickly and easily. Get matched with nearby NGOs automatically.</p>
+                <ul>
+                    <li>Create food listings in seconds</li>
+                    <li>Smart NGO matching by location</li>
+                    <li>Track your impact with analytics</li>
+                </ul>
+            </mat-card>
+
+            <mat-card class="feature-card">
+                <mat-icon class="feature-icon receiver">volunteer_activism</mat-icon>
+                <h3>For Receivers (NGOs)</h3>
+                <p>Claim available food donations and coordinate pickups efficiently.</p>
+                <ul>
+                    <li>Browse available food nearby</li>
+                    <li>One-click claiming system</li>
+                    <li>Real-time notifications</li>
+                </ul>
+            </mat-card>
+
+            <mat-card class="feature-card">
+                <mat-icon class="feature-icon admin">admin_panel_settings</mat-icon>
+                <h3>Admin Dashboard</h3>
+                <p>Monitor platform activity, analyze impact, and detect fraud.</p>
+                <ul>
+                    <li>Comprehensive analytics</li>
+                    <li>Fraud detection system</li>
+                    <li>User management tools</li>
+                </ul>
+            </mat-card>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact">
+        <h2 class="section-title">Our Impact</h2>
+        <div class="impact-stats">
+            <div class="stat-card">
+                <mat-icon>restaurant_menu</mat-icon>
+                <h3>10,000+</h3>
+                <p>Meals Saved</p>
+            </div>
+            <div class="stat-card">
+                <mat-icon>people</mat-icon>
+                <h3>500+</h3>
+                <p>Active Users</p>
+            </div>
+            <div class="stat-card">
+                <mat-icon>eco</mat-icon>
+                <h3>5 Tons</h3>
+                <p>CO₂ Reduced</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join ZeroPlate today and help us fight food waste together.</p>
+        <a mat-raised-button color="accent" routerLink="/auth/register" class="cta-button-large">
+            Sign Up Now
+        </a>
+    </section>
+</div>

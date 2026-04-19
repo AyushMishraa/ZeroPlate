@@ -1,20 +1,32 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { ThemeService } from './core/services/theme.service';
+import { NavbarComponent } from './shared/components/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, NavbarComponent],
   template: `
-    <router-outlet></router-outlet>
+    <div class="app-container">
+      <app-navbar></app-navbar>
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
   `,
-  styles: []
+  styles: [`
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-content {
+      flex: 1;
+      background-color: #f5f5f5;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'ZeroPlate';
-
-  constructor(private themeService: ThemeService) {}
+  title = 'ZeroPlate - Food Waste Reduction Platform';
 }
-

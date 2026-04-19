@@ -1,0 +1,125 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1>Welcome back, {{ userName }}!</h1>
+            <p class="subtitle">Manage your food donations and track your impact</p>
+        </div>
+        <a mat-raised-button color="primary" routerLink="/donor/add-food">
+            <mat-icon>add</mat-icon>
+            Add Food Item
+        </a>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-container">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else {
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <mat-card class="stat-card">
+            <div class="stat-icon available">
+                <mat-icon>restaurant</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.activeListings }}</h3>
+                <p>Active Listings</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <div class="stat-icon claimed">
+                <mat-icon>shopping_basket</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.claimedItems }}</h3>
+                <p>Items Claimed</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <div class="stat-icon completed">
+                <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.pickedUpItems }}</h3>
+                <p>Picked Up</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <div class="stat-icon total">
+                <mat-icon>eco</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.totalMeals }}</h3>
+                <p>Total Meals Saved</p>
+            </div>
+        </mat-card>
+    </div>
+
+    <!-- Recent Listings -->
+    <mat-card class="recent-listings">
+        <div class="card-header">
+            <h2>Recent Listings</h2>
+            <a mat-button routerLink="/donor/my-foods">View All</a>
+        </div>
+
+        @if (recentFoods.length > 0) {
+        <div class="food-list">
+            @for (food of recentFoods; track food._id) {
+            <div class="food-item">
+                <div class="food-info">
+                    <div class="food-icon">
+                        <mat-icon>restaurant_menu</mat-icon>
+                    </div>
+                    <div class="food-details">
+                        <h4>{{ food.title }}</h4>
+                        <p class="food-meta">
+                            <mat-icon class="small-icon">inventory</mat-icon>
+                            {{ food.quantity }} servings
+                            <span class="separator">•</span>
+                            <mat-icon class="small-icon">schedule</mat-icon>
+                            Expires {{ formatDate(food.expirationDate) }}
+                        </p>
+                    </div>
+                </div>
+                <div class="food-status">
+                    <span [class]="'status-badge ' + food.status">
+                        {{ food.status | titlecase }}
+                    </span>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="empty-state">
+            <mat-icon>restaurant</mat-icon>
+            <p>No food listings yet</p>
+            <a mat-raised-button color="primary" routerLink="/donor/add-food">
+                Add Your First Item
+            </a>
+        </div>
+        }
+    </mat-card>
+
+    <!-- Impact Summary -->
+    <mat-card class="impact-card">
+        <h2>Your Impact</h2>
+        <p class="impact-description">
+            You've helped save {{ stats.totalMeals }} meals and reduced approximately
+            <strong>{{ calculateCO2Reduction() }} kg</strong> of CO₂ emissions!
+        </p>
+        <div class="impact-visual">
+            <div class="impact-item">
+                <mat-icon>people</mat-icon>
+                <span>{{ stats.helpedPeople }} people helped</span>
+            </div>
+            <div class="impact-item">
+                <mat-icon>eco</mat-icon>
+                <span>{{ calculateCO2Reduction() }} kg CO₂ saved</span>
+            </div>
+        </div>
+    </mat-card>
+    }
+</div>

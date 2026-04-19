@@ -1,42 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface DashboardStats {
-  totalUsers: number;
-  totalFoodItems: number;
-  totalClaims: number;
-  pendingPickups: number;
-  foodByType: Array<{ _id: string; count: number }>;
-}
-
-export interface PendingPickup {
-  _id: string;
-  food: any;
-  receiver: any;
-  status: string;
-}
+import { environment } from '../../../environments/environment';
+import { DashboardStats, PendingPickup, ApiResponse } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = '/api/admin';
+  private apiUrl = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) {}
 
-  getDashboardStats(): Observable<{ success: boolean; stats: DashboardStats }> {
-    return this.http.get<{ success: boolean; stats: DashboardStats }>(
-      `${this.apiUrl}/adminDashboard`,
-      { withCredentials: true }
-    );
+  // Get dashboard statistics
+  getDashboardStats(): Observable<ApiResponse<DashboardStats>> {
+    return this.http.get<ApiResponse<DashboardStats>>(`${this.apiUrl}/adminDashboard`);
   }
 
-  getPendingPickups(): Observable<{ success: boolean; totalClaimedFood: number }> {
-    return this.http.get<{ success: boolean; totalClaimedFood: number }>(
-      `${this.apiUrl}/pendingPickups`,
-      { withCredentials: true }
-    );
+  // Get pending pickups
+  getPendingPickups(): Observable<ApiResponse<{ pendingClaims: PendingPickup[]; count: number }>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/pendingPickups`);
+  }
+
+  // Update user role (admin only)
+  updateUserRole(userId: string, role: 'donor' | 'receiver' | 'admin'): Observable<any> {
+    return this.http.put(`${this.apiUrl}/role/${userId}`, { role });
   }
 }
-

@@ -1,11 +1,10 @@
 import mongoose from "mongoose";
-import { prependOnceListener } from "process";
 
 export interface FoodInterface extends mongoose.Document {
   title: string;
   quantity: number;
   status: "available" | "claimed" | "picked_up" | "expired";
-  donor: mongoose.Schema.Types.ObjectId; 
+  donor: mongoose.Schema.Types.ObjectId;
   pickupLocation: string;
   createdAt: Date;
   updatedAt: Date;
@@ -18,7 +17,7 @@ export interface FoodInterface extends mongoose.Document {
 }
 
 const foodSchema = new mongoose.Schema<FoodInterface>({
-    title: { 
+    title: {
         type: String,
         required: true
     },
@@ -32,21 +31,17 @@ const foodSchema = new mongoose.Schema<FoodInterface>({
     status: {
         type: String,
         enum: ["available", "claimed", "picked_up", "expired"],
-        required: true
+        required: true,
+        default: "available"
     },
     donor: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
-    createdAt :{
-        type: Date
+        required: true,
+        ref: "User"
     },
     expirationDate: {
         type: Date,
         required: true
-    },
-    updatedAt: {
-        type: Date
     },
     pickupLocation: {
         type: String,
@@ -60,10 +55,12 @@ const foodSchema = new mongoose.Schema<FoodInterface>({
         },
         coordinates: {
             type: [Number],
-            required: true,
-
+            default: [0, 0]
         },
     }
-});
+}, { timestamps: true });
+
+// 2dsphere index for geo-matching near-NGO queries
+foodSchema.index({ location: "2dsphere" });
 
 export const FoodModel = mongoose.model<FoodInterface>("Food", foodSchema);

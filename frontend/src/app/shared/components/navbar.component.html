@@ -1,0 +1,81 @@
+<mat-toolbar color="primary" class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <a routerLink="/" class="brand-link">
+                <mat-icon>restaurant</mat-icon>
+                <span class="brand-name">ZeroPlate</span>
+            </a>
+        </div>
+
+        <div class="navbar-menu">
+            @if (isAuthenticated()) {
+            @if (userRole() === 'donor') {
+            <a mat-button routerLink="/donor/dashboard" routerLinkActive="active">Dashboard</a>
+            <a mat-button routerLink="/donor/add-food" routerLinkActive="active">Add Food</a>
+            <a mat-button routerLink="/donor/my-foods" routerLinkActive="active">My Foods</a>
+            }
+
+            @if (userRole() === 'receiver') {
+            <a mat-button routerLink="/receiver/dashboard" routerLinkActive="active">Dashboard</a>
+            <a mat-button routerLink="/receiver/browse-food" routerLinkActive="active">Browse Food</a>
+            <a mat-button routerLink="/receiver/my-claims" routerLinkActive="active">My Claims</a>
+            }
+
+            @if (userRole() === 'admin') {
+            <a mat-button routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+            <a mat-button routerLink="/admin/analytics" routerLinkActive="active">Analytics</a>
+            <a mat-button routerLink="/admin/fraud" routerLinkActive="active">Fraud Detection</a>
+            }
+
+            <button mat-icon-button [matMenuTriggerFor]="notificationMenu" [matBadge]="notificationCount()"
+                matBadgeColor="warn" [matBadgeHidden]="notificationCount() === 0">
+                <mat-icon>notifications</mat-icon>
+            </button>
+
+            <button mat-icon-button [matMenuTriggerFor]="userMenu">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+            } @else {
+            <a mat-button routerLink="/auth/login">Login</a>
+            <a mat-raised-button color="accent" routerLink="/auth/register">Sign Up</a>
+            }
+        </div>
+    </div>
+</mat-toolbar>
+
+<mat-menu #notificationMenu="matMenu">
+    @if (notifications().length > 0) {
+    @for (notification of notifications(); track notification.timestamp) {
+    <div mat-menu-item class="notification-item">
+        <div class="notification-content">
+            <mat-icon [class]="'notification-icon ' + notification.type">{{ getNotificationIcon(notification.type)
+                }}</mat-icon>
+            <div class="notification-text">
+                <p class="notification-message">{{ notification.message }}</p>
+                <span class="notification-time">{{ formatTime(notification.timestamp) }}</span>
+            </div>
+        </div>
+    </div>
+    }
+    } @else {
+    <div mat-menu-item class="no-notifications">
+        <mat-icon>notifications_none</mat-icon>
+        <span>No new notifications</span>
+    </div>
+    }
+</mat-menu>
+
+<mat-menu #userMenu="matMenu">
+    <div class="user-info">
+        <mat-icon>person</mat-icon>
+        <div>
+            <p class="user-name">{{ userName() }}</p>
+            <p class="user-role">{{ userRole() | titlecase }}</p>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+    </button>
+</mat-menu>

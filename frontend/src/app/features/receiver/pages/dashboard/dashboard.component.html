@@ -1,0 +1,159 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1>Welcome, {{ userName() }}!</h1>
+            <p class="subtitle">Browse available food and manage your claims</p>
+        </div>
+        <a mat-raised-button color="primary" routerLink="/receiver/browse-food">
+            <mat-icon>search</mat-icon>
+            Browse Food
+        </a>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-container">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else {
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <mat-card class="stat-card">
+            <div class="stat-icon available">
+                <mat-icon>restaurant</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.availableFood }}</h3>
+                <p>Available Nearby</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <div class="stat-icon claimed">
+                <mat-icon>shopping_basket</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.myClaims }}</h3>
+                <p>My Claims</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <div class="stat-icon pending">
+                <mat-icon>pending</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.pendingPickups }}</h3>
+                <p>Pending Pickups</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <div class="stat-icon completed">
+                <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.completed }}</h3>
+                <p>Completed</p>
+            </div>
+        </mat-card>
+    </div>
+
+    <!-- Available Food Nearby -->
+    <mat-card class="section-card">
+        <div class="card-header">
+            <h2>Available Food Nearby</h2>
+            <a mat-button routerLink="/receiver/browse-food">View All</a>
+        </div>
+
+        @if (nearbyFoods.length > 0) {
+        <div class="food-list">
+            @for (food of nearbyFoods.slice(0, 5); track food._id) {
+            <div class="food-item">
+                <div class="food-info">
+                    <div class="food-icon">
+                        <mat-icon>restaurant_menu</mat-icon>
+                    </div>
+                    <div class="food-details">
+                        <h4>{{ food.title }}</h4>
+                        <p class="food-meta">
+                            <mat-icon class="small-icon">inventory</mat-icon>
+                            {{ food.quantity }} servings
+                            <span class="separator">•</span>
+                            <mat-icon class="small-icon">schedule</mat-icon>
+                            Expires {{ formatDate(food.expirationDate) }}
+                            <span class="separator">•</span>
+                            <mat-icon class="small-icon">place</mat-icon>
+                            {{ getDonorName(food) }}
+                        </p>
+                    </div>
+                </div>
+                <a mat-raised-button color="primary" routerLink="/receiver/browse-food">
+                    View
+                </a>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="empty-state">
+            <mat-icon>search_off</mat-icon>
+            <p>No food available nearby at the moment</p>
+        </div>
+        }
+    </mat-card>
+
+    <!-- Recent Claims -->
+    <mat-card class="section-card">
+        <div class="card-header">
+            <h2>Recent Claims</h2>
+            <a mat-button routerLink="/receiver/my-claims">View All</a>
+        </div>
+
+        @if (recentClaims.length > 0) {
+        <div class="claims-list">
+            @for (claim of recentClaims.slice(0, 3); track claim._id) {
+            <div class="claim-item">
+                <div class="claim-info">
+                    <mat-icon [class]="'claim-status-icon ' + claim.status">
+                        {{ getClaimIcon(claim.status) }}
+                    </mat-icon>
+                    <div class="claim-details">
+                        <h4>{{ getFoodTitle(claim) }}</h4>
+                        <p class="claim-meta">
+                            Status: <strong>{{ claim.status | titlecase }}</strong>
+                            <span class="separator">•</span>
+                            Claimed {{ formatDate(claim.createdAt) }}
+                        </p>
+                    </div>
+                </div>
+                <span [class]="'status-badge ' + claim.status">
+                    {{ claim.status | titlecase }}
+                </span>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <p>No claims yet</p>
+            <a mat-raised-button color="primary" routerLink="/receiver/browse-food">
+                Browse Food
+            </a>
+        </div>
+        }
+    </mat-card>
+
+    <!-- Impact Card -->
+    <mat-card class="impact-card">
+        <h2>Your Impact</h2>
+        <p class="impact-description">
+            You've helped rescue <strong>{{ stats.totalMealsReceived }} meals</strong> from going to waste!
+        </p>
+        <div class="impact-visual">
+            <div class="impact-item">
+                <mat-icon>eco</mat-icon>
+                <span>{{ calculateCO2Saved() }} kg CO₂ saved</span>
+            </div>
+        </div>
+    </mat-card>
+    }
+</div>
